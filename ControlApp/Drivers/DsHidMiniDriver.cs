@@ -3,7 +3,7 @@ using System.ComponentModel;
 using Nefarius.DsHidMini.Util.WPF;
 using Nefarius.Utilities.DeviceManagement.PnP;
 
-namespace Nefarius.DsHidMini.Drivers
+namespace Nefarius.DsHidMini.ControlApp.Drivers
 {
     public static class DsHidMiniDriver
     {
@@ -24,62 +24,6 @@ namespace Nefarius.DsHidMini.Drivers
         public static DevicePropertyKey LastPairingStatusProperty => CustomDeviceProperty.CreateCustomDeviceProperty(
             Guid.Parse("{3FECF510-CC94-4FBE-8839-738201F84D59}"), 3,
             typeof(int));
-
-        #endregion
-
-        #region Boot configuration properties
-
-        /// <summary>
-        ///     Unified Device Property exposing current HID device emulation mode.
-        /// </summary>
-        public static DevicePropertyKey HidDeviceModeProperty => CustomDeviceProperty.CreateCustomDeviceProperty(
-            Guid.Parse("{6D293077-C3D6-4062-9597-BE4389404C02}"), 2,
-            typeof(byte));
-
-        public static DevicePropertyKey IsOutputRateControlEnabledProperty => CustomDeviceProperty.CreateCustomDeviceProperty(
-            Guid.Parse("{6D293077-C3D6-4062-9597-BE4389404C02}"), 3,
-            typeof(byte));
-
-        public static DevicePropertyKey OutputRateControlPeriodMsProperty => CustomDeviceProperty.CreateCustomDeviceProperty(
-            Guid.Parse("{6D293077-C3D6-4062-9597-BE4389404C02}"), 4,
-            typeof(byte));
-
-        public static DevicePropertyKey IsOutputDeduplicatorEnabledProperty => CustomDeviceProperty.CreateCustomDeviceProperty(
-            Guid.Parse("{6D293077-C3D6-4062-9597-BE4389404C02}"), 5,
-            typeof(byte));
-
-        public static DevicePropertyKey WirelessIdleTimeoutPeriodMsProperty => CustomDeviceProperty.CreateCustomDeviceProperty(
-            Guid.Parse("{6D293077-C3D6-4062-9597-BE4389404C02}"), 6,
-            typeof(uint));
-
-        #endregion
-
-        #region Hot-reload changeable properties
-
-        /// <summary>
-        ///     Unified Device Property exposing if digital button states are suppressed.
-        /// </summary>
-        public static DevicePropertyKey MuteDigitalPressureButtonsProperty =>
-            CustomDeviceProperty.CreateCustomDeviceProperty(
-                Guid.Parse("{99ACCB6C-D709-49BB-90EE-278B1B564A4B}"), 2,
-                typeof(byte));
-
-        #endregion
-
-        #region Common device properties
-
-        public static DevicePropertyKey HostAddressProperty => CustomDeviceProperty.CreateCustomDeviceProperty(
-            Guid.Parse("{0xa92f26ca, 0xeda7, 0x4b1d, {0x9d, 0xb2, 0x27, 0xb6, 0x8a, 0xa5, 0xa2, 0xeb}}"), 1,
-            typeof(ulong));
-
-        public static DevicePropertyKey DeviceAddressProperty => CustomDeviceProperty.CreateCustomDeviceProperty(
-            Guid.Parse("{0x2bd67d8b, 0x8beb, 0x48d5, {0x87, 0xe0, 0x6c, 0xda, 0x34, 0x28, 0x04, 0x0a}}"), 1,
-            typeof(string));
-
-        public static DevicePropertyKey BluetoothLastConnectedTimeProperty =>
-            CustomDeviceProperty.CreateCustomDeviceProperty(
-                Guid.Parse("{0x2bd67d8b, 0x8beb, 0x48d5, {0x87, 0xe0, 0x6c, 0xda, 0x34, 0x28, 0x04, 0x0a}}"), 11,
-                typeof(DateTimeOffset));
 
         #endregion
     }

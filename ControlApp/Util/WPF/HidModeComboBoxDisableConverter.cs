@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Globalization;
 using System.Windows.Data;
-using Nefarius.DsHidMini.Drivers;
 
 namespace Nefarius.DsHidMini.Util.WPF
 {
