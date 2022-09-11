@@ -342,3 +342,5 @@ healthchecksdb
 /_DSHMC
 /DSHMC.json
 /DSHMC.schema.json
+/setup/DsHidMini Driver-cache
+/setup/DsHidMini Driver-SetupFiles
