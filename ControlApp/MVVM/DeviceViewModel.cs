@@ -3,6 +3,7 @@ using System.ComponentModel;
 using System.Net.NetworkInformation;
 using System.Threading;
 using FontAwesome5;
+using Nefarius.DsHidMini.ControlApp.Util;
 using Nefarius.DsHidMini.Drivers;
 using Nefarius.DsHidMini.Util;
 using Nefarius.DsHidMini.Util.Web;

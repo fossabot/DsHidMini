@@ -1,6 +1,6 @@
 ﻿using Microsoft.Win32;
 
-namespace Nefarius.DsHidMini.Drivers
+namespace Nefarius.DsHidMini.ControlApp.Drivers
 {
     public static class BthPS3ProfileDriver
     {
@@ -15,10 +15,7 @@ namespace Nefarius.DsHidMini.Drivers
             {
                 using (var key = Registry.LocalMachine.OpenSubKey(ParametersPath))
                 {
-                    if (int.TryParse(key?.GetValue("RawPDO").ToString(), out var result))
-                    {
-                        return result > 0;
-                    }
+                    if (int.TryParse(key?.GetValue("RawPDO").ToString(), out var result)) return result > 0;
 
                     return false;
                 }

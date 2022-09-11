@@ -2,12 +2,14 @@
 using System.ComponentModel;
 using System.Reflection;
 using Microsoft.Win32;
-using Nefarius.DsHidMini.Drivers;
+using Nefarius.DsHidMini.ControlApp.Drivers;
+using Nefarius.DsHidMini.ControlApp.Util;
+using Nefarius.DsHidMini.MVVM;
 using Nefarius.DsHidMini.Util;
 using Nefarius.DsHidMini.Util.App;
 using Nefarius.DsHidMini.Util.Web;
 
-namespace Nefarius.DsHidMini.MVVM
+namespace Nefarius.DsHidMini.ControlApp.MVVM
 {
     public class MainViewModel : INotifyPropertyChanged
     {

@@ -1,8 +1,7 @@
 ﻿using System;
-using System.IO;
 using System.Runtime.InteropServices;
 
-namespace Nefarius.DsHidMini.Util
+namespace Nefarius.DsHidMini.ControlApp.Util
 {
     internal static class SetupApiWrapper
     {

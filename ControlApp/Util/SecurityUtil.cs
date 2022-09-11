@@ -1,6 +1,6 @@
 ﻿using System.Security.Principal;
 
-namespace Nefarius.DsHidMini.Util
+namespace Nefarius.DsHidMini.ControlApp.Util
 {
     public static class SecurityUtil
     {

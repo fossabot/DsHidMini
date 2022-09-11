@@ -4,9 +4,8 @@ using System.Net.NetworkInformation;
 using System.Runtime.ConstrainedExecution;
 using System.Runtime.InteropServices;
 using System.Security;
-using PInvoke;
 
-namespace Nefarius.DsHidMini.Util
+namespace Nefarius.DsHidMini.ControlApp.Util
 {
     public static class BluetoothHelper
     {

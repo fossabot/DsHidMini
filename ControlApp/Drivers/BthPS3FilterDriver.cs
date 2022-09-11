@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Runtime.InteropServices;
+using Nefarius.DsHidMini.ControlApp.Util;
 using Nefarius.DsHidMini.Util;
-using PInvoke;
 
-namespace Nefarius.DsHidMini.Drivers
+namespace Nefarius.DsHidMini.ControlApp.Drivers
 {
     public static class BthPS3FilterDriver
     {

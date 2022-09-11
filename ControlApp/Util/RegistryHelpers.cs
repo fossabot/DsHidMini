@@ -3,7 +3,7 @@ using System;
 
 namespace Nefarius.DsHidMini.Util
 {
-    public class RegistryHelpers
+    public static class RegistryHelpers
     {
         public static RegistryKey GetRegistryKey()
         {
