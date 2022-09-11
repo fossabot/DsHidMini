@@ -5,7 +5,7 @@ using System.Threading;
 using FontAwesome5;
 using Nefarius.DsHidMini.ControlApp.Drivers;
 using Nefarius.DsHidMini.ControlApp.Util;
-using Nefarius.DsHidMini.Util.Web;
+using Nefarius.DsHidMini.ControlApp.Util.Web;
 using Nefarius.Utilities.DeviceManagement.PnP;
 
 namespace Nefarius.DsHidMini.ControlApp.MVVM

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using Newtonsoft.Json;
 
-namespace Nefarius.DsHidMini.Util.Web
+namespace Nefarius.DsHidMini.ControlApp.Util.Web
 {
     // Root myDeserializedClass = JsonConvert.DeserializeObject<Root>(myJsonResponse); 
     public class Author

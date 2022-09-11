@@ -5,7 +5,7 @@ using System.Net;
 using System.Net.NetworkInformation;
 using Newtonsoft.Json;
 
-namespace Nefarius.DsHidMini.Util.Web
+namespace Nefarius.DsHidMini.ControlApp.Util.Web
 {
     public class OUIEntry : IEquatable<OUIEntry>
     {

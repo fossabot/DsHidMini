@@ -12,7 +12,7 @@ using System.Text;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
-namespace Nefarius.DsHidMini.Util.App
+namespace Nefarius.DsHidMini.ControlApp.Util.App
 {
     /// <summary>Provides methods to load and save the application configuration. </summary>
     public static class JsonApplicationConfiguration

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Nefarius.DsHidMini.Util.App
+namespace Nefarius.DsHidMini.ControlApp.Util.App
 {
     /// <summary>
     ///     Global settings of the UI tool (stored in %AppData%).

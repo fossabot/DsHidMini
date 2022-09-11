@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Reflection;
-using Nefarius.DsHidMini.Util.App;
+using Nefarius.DsHidMini.ControlApp.Util.App;
 using Newtonsoft.Json;
 using Serilog;
 
-namespace Nefarius.DsHidMini.Util.Web
+namespace Nefarius.DsHidMini.ControlApp.Util.Web
 {
     /// <summary>
     ///     Checks for updates via GitHub API.
