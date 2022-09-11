@@ -1,7 +1,7 @@
 ﻿using System;
-using System.Windows.Markup;
+using Avalonia.Markup.Xaml;
 
-namespace Nefarius.DsHidMini.Util.WPF
+namespace Nefarius.DsHidMini.ControlApp.Util.WPF
 {
     public class EnumBindingSourceExtension : MarkupExtension
     {

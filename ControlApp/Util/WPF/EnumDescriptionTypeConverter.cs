@@ -2,7 +2,7 @@
 using System.ComponentModel;
 using System.Globalization;
 
-namespace Nefarius.DsHidMini.Util.WPF
+namespace Nefarius.DsHidMini.ControlApp.Util.WPF
 {
     public class EnumDescriptionTypeConverter : EnumConverter
     {
@@ -22,7 +22,7 @@ namespace Nefarius.DsHidMini.Util.WPF
                     if (fi != null)
                     {
                         var attributes =
-                            (DescriptionAttribute[]) fi.GetCustomAttributes(typeof(DescriptionAttribute), false);
+                            (DescriptionAttribute[])fi.GetCustomAttributes(typeof(DescriptionAttribute), false);
                         return attributes.Length > 0 && !string.IsNullOrEmpty(attributes[0].Description)
                             ? attributes[0].Description
                             : value.ToString();

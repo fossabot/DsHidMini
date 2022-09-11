@@ -22,6 +22,7 @@ namespace Nefarius.DsHidMini.ControlApp.MVVM
             _batteryQuery = new Timer(UpdateBatteryStatus, null, 10000, 10000);
         }
 
+        /*
         public bool MuteDigitalPressureButtons
         {
             get => _device.GetProperty<byte>(DsHidMiniDriver.MuteDigitalPressureButtonsProperty) > 0;
@@ -37,6 +38,7 @@ namespace Nefarius.DsHidMini.ControlApp.MVVM
                 }
             }
         }
+        */
 
         public bool IsHidModeChangeable =>
             SecurityUtil.IsElevated /*&& HidEmulationMode != DsHidDeviceMode.XInputHIDCompatible*/;
@@ -56,6 +58,7 @@ namespace Nefarius.DsHidMini.ControlApp.MVVM
             }
         }
 
+        /*
         public bool IsOutputRateControlEnabled
         {
             get => _device.GetProperty<byte>(DsHidMiniDriver.IsOutputRateControlEnabledProperty) > 0;
@@ -79,6 +82,7 @@ namespace Nefarius.DsHidMini.ControlApp.MVVM
             get => _device.GetProperty<uint>(DsHidMiniDriver.WirelessIdleTimeoutPeriodMsProperty) / 60000;
             set => _device.SetProperty(DsHidMiniDriver.WirelessIdleTimeoutPeriodMsProperty, value * 60000);
         }
+        */
 
         /// <summary>
         ///     The device Instance ID.
