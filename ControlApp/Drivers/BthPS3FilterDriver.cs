@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Runtime.InteropServices;
+using Windows.Win32;
+using Windows.Win32.Foundation;
+using Windows.Win32.Storage.FileSystem;
 using Nefarius.DsHidMini.ControlApp.Util;
-using Nefarius.DsHidMini.Util;
 
 namespace Nefarius.DsHidMini.ControlApp.Drivers
 {
@@ -26,127 +28,121 @@ namespace Nefarius.DsHidMini.ControlApp.Drivers
                 if (!BluetoothHelper.IsBluetoothRadioAvailable)
                     return false;
 
-                using (var handle = Kernel32.CreateFile(BTHPS3PSM_CONTROL_DEVICE_PATH,
-                    Kernel32.ACCESS_MASK.GenericRight.GENERIC_READ | Kernel32.ACCESS_MASK.GenericRight.GENERIC_WRITE,
-                    Kernel32.FileShare.FILE_SHARE_READ | Kernel32.FileShare.FILE_SHARE_WRITE,
-                    IntPtr.Zero, Kernel32.CreationDisposition.OPEN_EXISTING,
-                    Kernel32.CreateFileFlags.FILE_ATTRIBUTE_NORMAL
-                    | Kernel32.CreateFileFlags.FILE_FLAG_NO_BUFFERING
-                    | Kernel32.CreateFileFlags.FILE_FLAG_WRITE_THROUGH,
-                    Kernel32.SafeObjectHandle.Null
-                ))
-                {
-                    var error = (Win32ErrorCode)Marshal.GetLastWin32Error();
+                using var handle = PInvoke.CreateFile(
+                    BTHPS3PSM_CONTROL_DEVICE_PATH,
+                    FILE_ACCESS_FLAGS.FILE_GENERIC_READ | FILE_ACCESS_FLAGS.FILE_GENERIC_WRITE,
+                    FILE_SHARE_MODE.FILE_SHARE_READ | FILE_SHARE_MODE.FILE_SHARE_WRITE,
+                    null,
+                    FILE_CREATION_DISPOSITION.OPEN_EXISTING,
+                    FILE_FLAGS_AND_ATTRIBUTES.FILE_ATTRIBUTE_NORMAL, null
+                );
 
-                    return (error == Win32ErrorCode.ERROR_SUCCESS || error == Win32ErrorCode.ERROR_ACCESS_DENIED);
-                }
+                var error = (WIN32_ERROR)Marshal.GetLastWin32Error();
+
+                return error is WIN32_ERROR.ERROR_SUCCESS or WIN32_ERROR.ERROR_ACCESS_DENIED;
             }
         }
 
         /// <summary>
         ///     Gets or sets current filter patching state.
         /// </summary>
-        public static bool IsFilterEnabled
+        public static unsafe bool IsFilterEnabled
         {
             get
             {
                 if (!BluetoothHelper.IsBluetoothRadioAvailable)
                     return false;
 
-                using (var handle = Kernel32.CreateFile(BTHPS3PSM_CONTROL_DEVICE_PATH,
-                    Kernel32.ACCESS_MASK.GenericRight.GENERIC_READ | Kernel32.ACCESS_MASK.GenericRight.GENERIC_WRITE,
-                    Kernel32.FileShare.FILE_SHARE_READ | Kernel32.FileShare.FILE_SHARE_WRITE,
-                    IntPtr.Zero, Kernel32.CreationDisposition.OPEN_EXISTING,
-                    Kernel32.CreateFileFlags.FILE_ATTRIBUTE_NORMAL
-                    | Kernel32.CreateFileFlags.FILE_FLAG_NO_BUFFERING
-                    | Kernel32.CreateFileFlags.FILE_FLAG_WRITE_THROUGH,
-                    Kernel32.SafeObjectHandle.Null
-                ))
+                using var handle = PInvoke.CreateFile(
+                    BTHPS3PSM_CONTROL_DEVICE_PATH,
+                    FILE_ACCESS_FLAGS.FILE_GENERIC_READ | FILE_ACCESS_FLAGS.FILE_GENERIC_WRITE,
+                    FILE_SHARE_MODE.FILE_SHARE_READ | FILE_SHARE_MODE.FILE_SHARE_WRITE,
+                    null,
+                    FILE_CREATION_DISPOSITION.OPEN_EXISTING,
+                    FILE_FLAGS_AND_ATTRIBUTES.FILE_ATTRIBUTE_NORMAL, null
+                );
+
+                if (handle.IsInvalid)
+                    throw new Exception(ErrorMessage);
+
+                var payloadBuffer = Marshal.AllocHGlobal(Marshal.SizeOf<BTHPS3PSM_GET_PSM_PATCHING>());
+                var payload = new BTHPS3PSM_GET_PSM_PATCHING { DeviceIndex = 0 };
+
+                try
                 {
-                    if (handle.IsInvalid)
-                        throw new Exception(ErrorMessage);
+                    Marshal.StructureToPtr(payload, payloadBuffer, false);
 
-                    var payloadBuffer = Marshal.AllocHGlobal(Marshal.SizeOf<BTHPS3PSM_GET_PSM_PATCHING>());
-                    var payload = new BTHPS3PSM_GET_PSM_PATCHING {DeviceIndex = 0};
+                    PInvoke.DeviceIoControl(
+                        handle,
+                        IOCTL_BTHPS3PSM_GET_PSM_PATCHING,
+                        payloadBuffer.ToPointer(),
+                        (uint)Marshal.SizeOf<BTHPS3PSM_GET_PSM_PATCHING>(),
+                        payloadBuffer.ToPointer(),
+                        (uint)Marshal.SizeOf<BTHPS3PSM_GET_PSM_PATCHING>(),
+                        null,
+                        null
+                    );
 
-                    try
-                    {
-                        Marshal.StructureToPtr(payload, payloadBuffer, false);
-
-                        Kernel32.DeviceIoControl(
-                            handle,
-                            unchecked((int) IOCTL_BTHPS3PSM_GET_PSM_PATCHING),
-                            payloadBuffer,
-                            Marshal.SizeOf<BTHPS3PSM_GET_PSM_PATCHING>(),
-                            payloadBuffer,
-                            Marshal.SizeOf<BTHPS3PSM_GET_PSM_PATCHING>(),
-                            out _,
-                            IntPtr.Zero
-                        );
-
-                        payload = Marshal.PtrToStructure<BTHPS3PSM_GET_PSM_PATCHING>(payloadBuffer);
-                    }
-                    finally
-                    {
-                        Marshal.FreeHGlobal(payloadBuffer);
-                    }
-
-                    return payload.IsEnabled > 0;
+                    payload = Marshal.PtrToStructure<BTHPS3PSM_GET_PSM_PATCHING>(payloadBuffer);
                 }
+                finally
+                {
+                    Marshal.FreeHGlobal(payloadBuffer);
+                }
+
+                return payload.IsEnabled > 0;
             }
             set
             {
-                using (var handle = Kernel32.CreateFile(BTHPS3PSM_CONTROL_DEVICE_PATH,
-                    Kernel32.ACCESS_MASK.GenericRight.GENERIC_READ | Kernel32.ACCESS_MASK.GenericRight.GENERIC_WRITE,
-                    Kernel32.FileShare.FILE_SHARE_READ | Kernel32.FileShare.FILE_SHARE_WRITE,
-                    IntPtr.Zero, Kernel32.CreationDisposition.OPEN_EXISTING,
-                    Kernel32.CreateFileFlags.FILE_ATTRIBUTE_NORMAL
-                    | Kernel32.CreateFileFlags.FILE_FLAG_NO_BUFFERING
-                    | Kernel32.CreateFileFlags.FILE_FLAG_WRITE_THROUGH,
-                    Kernel32.SafeObjectHandle.Null
-                ))
+                using var handle = PInvoke.CreateFile(
+                    BTHPS3PSM_CONTROL_DEVICE_PATH,
+                    FILE_ACCESS_FLAGS.FILE_GENERIC_READ | FILE_ACCESS_FLAGS.FILE_GENERIC_WRITE,
+                    FILE_SHARE_MODE.FILE_SHARE_READ | FILE_SHARE_MODE.FILE_SHARE_WRITE,
+                    null,
+                    FILE_CREATION_DISPOSITION.OPEN_EXISTING,
+                    FILE_FLAGS_AND_ATTRIBUTES.FILE_ATTRIBUTE_NORMAL, null
+                );
+
+                if (handle.IsInvalid)
+                    throw new Exception(ErrorMessage);
+
+                var payloadEnableBuffer = Marshal.AllocHGlobal(Marshal.SizeOf<BTHPS3PSM_ENABLE_PSM_PATCHING>());
+                var payloadEnable = new BTHPS3PSM_ENABLE_PSM_PATCHING { DeviceIndex = 0 };
+                var payloadDisableBuffer = Marshal.AllocHGlobal(Marshal.SizeOf<BTHPS3PSM_DISABLE_PSM_PATCHING>());
+                var payloadDisable = new BTHPS3PSM_DISABLE_PSM_PATCHING { DeviceIndex = 0 };
+
+                try
                 {
-                    if (handle.IsInvalid)
-                        throw new Exception(ErrorMessage);
+                    Marshal.StructureToPtr(payloadEnable, payloadEnableBuffer, false);
+                    Marshal.StructureToPtr(payloadDisable, payloadDisableBuffer, false);
 
-                    var payloadEnableBuffer = Marshal.AllocHGlobal(Marshal.SizeOf<BTHPS3PSM_ENABLE_PSM_PATCHING>());
-                    var payloadEnable = new BTHPS3PSM_ENABLE_PSM_PATCHING {DeviceIndex = 0};
-                    var payloadDisableBuffer = Marshal.AllocHGlobal(Marshal.SizeOf<BTHPS3PSM_DISABLE_PSM_PATCHING>());
-                    var payloadDisable = new BTHPS3PSM_DISABLE_PSM_PATCHING {DeviceIndex = 0};
-
-                    try
-                    {
-                        Marshal.StructureToPtr(payloadEnable, payloadEnableBuffer, false);
-                        Marshal.StructureToPtr(payloadDisable, payloadDisableBuffer, false);
-
-                        if (value)
-                            Kernel32.DeviceIoControl(
-                                handle,
-                                unchecked((int) IOCTL_BTHPS3PSM_ENABLE_PSM_PATCHING),
-                                payloadEnableBuffer,
-                                Marshal.SizeOf<BTHPS3PSM_ENABLE_PSM_PATCHING>(),
-                                IntPtr.Zero,
-                                0,
-                                out _,
-                                IntPtr.Zero
-                            );
-                        else
-                            Kernel32.DeviceIoControl(
-                                handle,
-                                unchecked((int) IOCTL_BTHPS3PSM_DISABLE_PSM_PATCHING),
-                                payloadDisableBuffer,
-                                Marshal.SizeOf<BTHPS3PSM_DISABLE_PSM_PATCHING>(),
-                                IntPtr.Zero,
-                                0,
-                                out _,
-                                IntPtr.Zero
-                            );
-                    }
-                    finally
-                    {
-                        Marshal.FreeHGlobal(payloadEnableBuffer);
-                        Marshal.FreeHGlobal(payloadDisableBuffer);
-                    }
+                    if (value)
+                        PInvoke.DeviceIoControl(
+                            handle,
+                            IOCTL_BTHPS3PSM_ENABLE_PSM_PATCHING,
+                            payloadEnableBuffer.ToPointer(),
+                            (uint)Marshal.SizeOf<BTHPS3PSM_ENABLE_PSM_PATCHING>(),
+                            null,
+                            0,
+                            null,
+                            null
+                        );
+                    else
+                        PInvoke.DeviceIoControl(
+                            handle,
+                            IOCTL_BTHPS3PSM_DISABLE_PSM_PATCHING,
+                            payloadDisableBuffer.ToPointer(),
+                            (uint)Marshal.SizeOf<BTHPS3PSM_DISABLE_PSM_PATCHING>(),
+                            null,
+                            0,
+                            null,
+                            null
+                        );
+                }
+                finally
+                {
+                    Marshal.FreeHGlobal(payloadEnableBuffer);
+                    Marshal.FreeHGlobal(payloadDisableBuffer);
                 }
             }
         }
