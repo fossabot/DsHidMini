@@ -1,1 +1,4 @@
-﻿
+﻿BluetoothFindFirstRadio
+BluetoothFindRadioClose
+BLUETOOTH_FIND_RADIO_PARAMS
+DeviceIoControl

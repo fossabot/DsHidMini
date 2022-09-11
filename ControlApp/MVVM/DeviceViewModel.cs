@@ -5,17 +5,15 @@ using System.Threading;
 using FontAwesome5;
 using Nefarius.DsHidMini.ControlApp.Util;
 using Nefarius.DsHidMini.Drivers;
-using Nefarius.DsHidMini.Util;
 using Nefarius.DsHidMini.Util.Web;
 using Nefarius.Utilities.DeviceManagement.PnP;
 
-namespace Nefarius.DsHidMini.MVVM
+namespace Nefarius.DsHidMini.ControlApp.MVVM
 {
     public class DeviceViewModel : INotifyPropertyChanged
     {
-        private readonly PnPDevice _device;
-
         private readonly Timer _batteryQuery;
+        private readonly PnPDevice _device;
 
         public DeviceViewModel(PnPDevice device)
         {
@@ -24,27 +22,14 @@ namespace Nefarius.DsHidMini.MVVM
             _batteryQuery = new Timer(UpdateBatteryStatus, null, 10000, 10000);
         }
 
-        private void UpdateBatteryStatus(object state)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("BatteryStatus"));
-        }
-
-        /// <summary>
-        ///     Apply changes by requesting device restart.
-        /// </summary>
-        public void ApplyChanges()
-        {
-            _device.Restart();
-        }
-
         public bool MuteDigitalPressureButtons
         {
             get => _device.GetProperty<byte>(DsHidMiniDriver.MuteDigitalPressureButtonsProperty) > 0;
             set
             {
                 using (var evt = EventWaitHandle.OpenExisting(
-                    $"Global\\DsHidMiniConfigHotReloadEvent{DeviceAddress}"
-                    ))
+                           $"Global\\DsHidMiniConfigHotReloadEvent{DeviceAddress}"
+                       ))
                 {
                     _device.SetProperty(DsHidMiniDriver.MuteDigitalPressureButtonsProperty, (byte)(value ? 1 : 0));
 
@@ -66,7 +51,7 @@ namespace Nefarius.DsHidMini.MVVM
                     DsHidMiniDriver.HidDeviceModeProperty);
             set
             {
-                _device.SetProperty(DsHidMiniDriver.HidDeviceModeProperty, (byte) value); 
+                _device.SetProperty(DsHidMiniDriver.HidDeviceModeProperty, (byte)value);
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(IsPressureMutingSupported)));
             }
         }
@@ -74,7 +59,7 @@ namespace Nefarius.DsHidMini.MVVM
         public bool IsOutputRateControlEnabled
         {
             get => _device.GetProperty<byte>(DsHidMiniDriver.IsOutputRateControlEnabledProperty) > 0;
-            set => _device.SetProperty(DsHidMiniDriver.IsOutputRateControlEnabledProperty, (byte) (value ? 1 : 0));
+            set => _device.SetProperty(DsHidMiniDriver.IsOutputRateControlEnabledProperty, (byte)(value ? 1 : 0));
         }
 
         public byte OutputRateControlPeriodMs
@@ -86,7 +71,7 @@ namespace Nefarius.DsHidMini.MVVM
         public bool IsOutputDeduplicatorEnabled
         {
             get => _device.GetProperty<byte>(DsHidMiniDriver.IsOutputDeduplicatorEnabledProperty) > 0;
-            set => _device.SetProperty(DsHidMiniDriver.IsOutputDeduplicatorEnabledProperty, (byte) (value ? 1 : 0));
+            set => _device.SetProperty(DsHidMiniDriver.IsOutputDeduplicatorEnabledProperty, (byte)(value ? 1 : 0));
         }
 
         public uint WirelessIdleTimeoutPeriodMs
@@ -192,13 +177,8 @@ namespace Nefarius.DsHidMini.MVVM
             get
             {
                 if (Validator.IsGenuineAddress(PhysicalAddress.Parse(DeviceAddress)))
-                {
                     return EFontAwesomeIcon.Regular_CheckCircle;
-                }
-                else
-                {
-                    return EFontAwesomeIcon.Solid_ExclamationTriangle;
-                }
+                return EFontAwesomeIcon.Solid_ExclamationTriangle;
             }
         }
 
@@ -209,7 +189,7 @@ namespace Nefarius.DsHidMini.MVVM
         {
             get
             {
-                var name = _device.GetProperty<string>(DevicePropertyDevice.FriendlyName);
+                var name = _device.GetProperty<string>(DevicePropertyKey.Device_FriendlyName);
 
                 return string.IsNullOrEmpty(name) ? "DS3 Compatible HID Device" : name;
             }
@@ -219,7 +199,7 @@ namespace Nefarius.DsHidMini.MVVM
         {
             get
             {
-                var enumerator = _device.GetProperty<string>(DevicePropertyDevice.EnumeratorName);
+                var enumerator = _device.GetProperty<string>(DevicePropertyKey.Device_EnumeratorName);
 
                 return !enumerator.Equals("USB", StringComparison.InvariantCultureIgnoreCase);
             }
@@ -240,8 +220,21 @@ namespace Nefarius.DsHidMini.MVVM
             _device.GetProperty<DateTimeOffset>(DsHidMiniDriver.BluetoothLastConnectedTimeProperty);
 
         public bool IsPressureMutingSupported =>
-            HidEmulationMode == DsHidDeviceMode.Single || HidEmulationMode == DsHidDeviceMode.Multi;
+            HidEmulationMode is DsHidDeviceMode.Single or DsHidDeviceMode.Multi;
 
         public event PropertyChangedEventHandler PropertyChanged;
+
+        private void UpdateBatteryStatus(object state)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("BatteryStatus"));
+        }
+
+        /// <summary>
+        ///     Apply changes by requesting device restart.
+        /// </summary>
+        public void ApplyChanges()
+        {
+            _device.Restart();
+        }
     }
 }

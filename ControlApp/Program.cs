@@ -1,7 +1,10 @@
-﻿using Avalonia;
-using System;
+﻿using System;
+using Avalonia;
+using ControlApp;
+using Projektanker.Icons.Avalonia;
+using Projektanker.Icons.Avalonia.FontAwesome;
 
-namespace ControlApp
+namespace Nefarius.DsHidMini.ControlApp
 {
     class Program
     {
@@ -16,6 +19,8 @@ namespace ControlApp
         public static AppBuilder BuildAvaloniaApp()
             => AppBuilder.Configure<App>()
                 .UsePlatformDetect()
-                .LogToTrace();
+                .LogToTrace()
+                .WithIcons(container => container
+                    .Register<FontAwesomeIconProvider>());
     }
 }
