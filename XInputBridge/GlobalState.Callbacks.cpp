@@ -177,6 +177,31 @@ DWORD WINAPI GlobalState::InitAsync(_In_ LPVOID lpParameter)
 	logs::Provider::SetLoggerProvider(loggerProvider);
 
 	LOG_INFO("Library got loaded into PID {}", GetCurrentProcessId());
+
+	//
+	// Set up metrics
+	// 
+
+	auto metricsExporter = otlp::OtlpGrpcMetricExporterFactory::Create();
+
+	std::string version{ "1.2.0" };
+	std::string schema{ "https://opentelemetry.io/schemas/1.2.0" };
+
+	// Initialize and set the global MeterProvider
+	sdkmetrics::PeriodicExportingMetricReaderOptions options;
+	options.export_interval_millis = std::chrono::milliseconds(1000);
+	options.export_timeout_millis = std::chrono::milliseconds(500);
+
+	auto reader =
+	sdkmetrics::PeriodicExportingMetricReaderFactory::Create(std::move(metricsExporter), options);
+
+	auto u_provider = sdkmetrics::MeterProviderFactory::Create();
+	auto* p = static_cast<sdkmetrics::MeterProvider*>(u_provider.get());
+
+	p->AddMetricReader(std::move(reader));
+
+	// TODO: implement counters etc.
+
 #endif
 
 	const auto _this = static_cast<GlobalState*>(lpParameter);

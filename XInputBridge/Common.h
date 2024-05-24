@@ -67,5 +67,24 @@ namespace sdkresource	= opentelemetry::sdk::resource;
 
 namespace sdklogs		= opentelemetry::sdk::logs;
 namespace logs			= opentelemetry::logs;
+
+#include <opentelemetry/exporters/otlp/otlp_grpc_metric_exporter_factory.h>
+#include <opentelemetry/exporters/otlp/otlp_grpc_metric_exporter_options.h>
+
+#include <opentelemetry/metrics/provider.h>
+#include <opentelemetry/sdk/metrics/aggregation/default_aggregation.h>
+#include <opentelemetry/sdk/metrics/aggregation/histogram_aggregation.h>
+#include <opentelemetry/sdk/metrics/export/periodic_exporting_metric_reader_factory.h>
+#include <opentelemetry/sdk/metrics/meter.h>
+#include <opentelemetry/sdk/metrics/meter_provider.h>
+#include <opentelemetry/sdk/metrics/meter_provider_factory.h>
+#include <opentelemetry/sdk/metrics/push_metric_exporter.h>
+#include <opentelemetry/sdk/metrics/view/instrument_selector_factory.h>
+#include <opentelemetry/sdk/metrics/view/meter_selector_factory.h>
+#include <opentelemetry/sdk/metrics/view/view_factory.h>
+
+namespace sdkmetrics	= opentelemetry::sdk::metrics;
+namespace common		= opentelemetry::common;
+namespace metricsapi	= opentelemetry::metrics;
 #endif
 
