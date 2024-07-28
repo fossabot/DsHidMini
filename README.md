@@ -1,6 +1,7 @@
 # <img src="assets/FireShock.png" align="left" />DsHidMini
 
 [![Build status](https://ci.appveyor.com/api/projects/status/vmf09i95d06c8mbh/branch/master?svg=true)](https://ci.appveyor.com/project/nefarius/dshidmini/branch/master) [![GitHub All Releases](https://img.shields.io/github/downloads/nefarius/DsHidMini/total)](https://somsubhra.github.io/github-release-stats/?username=nefarius&repository=DsHidMini) ![GitHub issues](https://img.shields.io/github/issues/nefarius/DsHidMini) [![Discord](https://img.shields.io/discord/346756263763378176.svg)](https://discord.nefarius.at/) [![Website](https://img.shields.io/website-up-down-green-red/https/docs.nefarius.at.svg?label=docs.nefarius.at)](https://docs.nefarius.at/)
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fnefarius%2FDsHidMini.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2Fnefarius%2FDsHidMini?ref=badge_shield)
 
 Virtual HID Mini-user-mode driver for Sony DualShock 3 Controllers
 
@@ -148,6 +149,9 @@ This is a community project and not affiliated with Sony Interactive Entertainme
 
 "PlayStation", "PSP", "PS2", "PS one", "DUALSHOCK" and "SIXAXIS" are registered trademarks of Sony Interactive
 Entertainment Inc.
+
+
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fnefarius%2FDsHidMini.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2Fnefarius%2FDsHidMini?ref=badge_large)
 
 ## Documentation
 
